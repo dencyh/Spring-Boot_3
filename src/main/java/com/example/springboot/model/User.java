@@ -2,18 +2,24 @@ package com.example.springboot.model;
 
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.Date;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
+
+	@Column(name = "password", nullable = false)
+	private String password;
 
 	@Column(name = "firstName", nullable = false)
 	private String firstName;
@@ -29,6 +35,17 @@ public class User {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private java.sql.Date birthDate;
 
+	@ManyToMany(
+		fetch = FetchType.EAGER,
+		cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+	)
+	@JoinTable(
+		name = "roles_users",
+		joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"),
+		inverseJoinColumns = @JoinColumn(name = "roleId", referencedColumnName = "id")
+	)
+	private Collection<Role> roles;
+
 	public User() {
 	}
 
@@ -40,11 +57,11 @@ public class User {
 		this.birthDate = new java.sql.Date(utilBirthDate.getTime());
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -72,6 +89,10 @@ public class User {
 		this.email = email;
 	}
 
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public Date getUtilBirthDate() {
 		return birthDate;
 	}
@@ -89,12 +110,51 @@ public class User {
 		this.birthDate = birthDate;
 	}
 
+	public Collection<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Collection<Role> roles) {
+		this.roles = roles;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return getRoles();
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	@Override
+	public String getUsername() {
+		return email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
 	@Override
 	public String toString() {
-		return "id = " + id +
-			   "\nemail = " + email +
-			   "\nfirstName = " + firstName +
-			   "\nlastName = " + lastName +
+		return "id = " + id + "\nemail = " + email + "\nfirstName = " + firstName + "\nlastName = " + lastName +
 			   "\nbirthDate = " + birthDate;
 	}
 }

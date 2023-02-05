@@ -18,16 +18,18 @@
       <span class="fw-bolder">admin@mail.ru</span>
       <span>with roles: ADMIN USER</span>
     </a>
-    <a href="#" class="text-white-50 text-decoration-none fs-5" type="submit">Logout</a>
+    <form th:action="@{/logout}" method="post">
+      <input type="submit" value="Logout" class="btn bg-transparent text-white-50 text-decoration-none fs-5"/>
+    </form>
   </div>
 </nav>
 <main class="d-flex pt-4 h-100">
   <ul class="col-2 list-group fs-5">
     <li>
-      <a href="#" class="list-group-item list-group-item-action active border-0" aria-current="true">Admin</a>
+      <a th:href="@{/admin}" class="list-group-item list-group-item-action active border-0" aria-current="true">Admin</a>
     </li>
     <li>
-      <a href="#" class="list-group-item list-group-item-action border-0">User</a>
+      <a th:href="@{/user}" class="list-group-item list-group-item-action border-0">User</a>
     </li>
   </ul>
   <section class="col-10 bg-light px-5">

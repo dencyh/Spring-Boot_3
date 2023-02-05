@@ -1,47 +1,60 @@
 package com.example.springboot.service;
 
-import com.example.springboot.dao.UserDao;
+import com.example.springboot.exception.UserAlreadyExistsException;
+import com.example.springboot.model.Role;
 import com.example.springboot.model.User;
+import com.example.springboot.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
-	private final UserDao userDao;
+	private final UserRepository userRepository;
+	private final BCryptPasswordEncoder passwordEncoder;
 
 	@Autowired
-	public UserServiceImpl(UserDao userDao) {
-		this.userDao = userDao;
+	public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
-	public User getUserById(long id) {
-		return userDao.getUserById(id);
+	public User getUserById(Long id) {
+		return userRepository.findById(id).orElse(null);
 	}
 
 	@Override
-	@Transactional
 	public void saveUser(User user) {
-		userDao.saveUser(user);
+		User userFromDb = userRepository.findByEmail(user.getEmail());
+
+		if (userFromDb != null) {
+			throw new UserAlreadyExistsException(String.format("User with email %s already exists", user.getEmail()));
+		}
+
+		user.setRoles(Collections.singleton(new Role("ROLE_USER")));
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		userRepository.save(user);
 	}
 
 	@Override
 	public List<User> getAllUsers() {
-		return userDao.getAllUsers();
+		return userRepository.findAll();
 	}
 
 	@Override
-	@Transactional
-	public void deleteUserById(long id) {
-		userDao.deleteUserById(id);
+	public void deleteUserById(Long id) {
+		userRepository.deleteById(id);
 	}
 
 	@Override
-	@Transactional
 	public void updateUser(User user) {
-		userDao.updateUser(user);
+		userRepository.save(user);
 	}
 }
