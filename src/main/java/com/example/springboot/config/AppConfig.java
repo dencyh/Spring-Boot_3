@@ -22,7 +22,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableWebMvc
-@PropertySource("classpath:db.properties")
+@PropertySource("classpath:application.properties")
 @ComponentScan(value = "com.example.springboot")
 public class AppConfig {
 	@Autowired
