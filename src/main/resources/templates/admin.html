@@ -26,7 +26,9 @@
 <main class="d-flex pt-4 h-100">
   <ul class="col-2 list-group fs-5">
     <li>
-      <a th:href="@{/admin}" class="list-group-item list-group-item-action active border-0" aria-current="true">Admin</a>
+      <a th:href="@{/admin}"
+         class="list-group-item list-group-item-action active border-0"
+         aria-current="true">Admin</a>
     </li>
     <li>
       <a th:href="@{/user}" class="list-group-item list-group-item-action border-0">User</a>
@@ -84,7 +86,9 @@
               <td class="py-3 align-middle" th:text="${user.getFirstName()}"/>
               <td class="py-3 align-middle" th:text="${user.getLastName()}"/>
               <td class="py-3 align-middle" th:text="${#dates.format(user.getBirthDate(), 'dd-MM-yyyy')}"/>
-              <td class="py-3 align-middle">ADMIN USER</td>
+              <td th:each="role: ${user.getRoles()}" class="py-3 align-middle">
+                <span th:text="${role.getName()}"/>
+              </td>
               <td class="py-3 align-middle fs-6">
                 <a th:href="@{'/users/{id}/edit'(id=${user.getId()})}" class="btn btn-info text-white">
                   <span>Edit</span>
@@ -109,7 +113,10 @@
       <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
         <h4 class="p-3 mb-0 border-bottom">Add new user</h4>
         <div class="bg-white p-4 d-flex flex-column align-items-center">
-          <form method="POST" th:action="@{/users}" th:object="${newUser}" class="col-lg-6 d-flex flex-column align-items-center">
+          <form method="POST"
+                th:action="@{/users}"
+                th:object="${newUser}"
+                class="col-lg-6 d-flex flex-column align-items-center">
             <div class="mb-3 d-flex flex-column align-items-center w-100">
               <label for="email" class="form-label fw-bold">Email address</label>
               <input type="email" class="form-control" id="email" required th:field="*{email}">
@@ -131,6 +138,12 @@
                      th:field="*{utilBirthDate}"
               >
             </div>
+            <select th:size="${roles.size()}" multiple class="form-select">
+              <option th:each="role: ${roles}"
+                      th:value="${role.getName()}"
+                      th:text="${role.getName()}"
+              />
+            </select>
             <button type="submit" class="mt-5 btn btn-success fs-4">Add new user</button>
           </form>
         </div>

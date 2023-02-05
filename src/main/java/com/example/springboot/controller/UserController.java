@@ -1,7 +1,10 @@
 package com.example.springboot.controller;
 
+import com.example.springboot.model.Role;
 import com.example.springboot.model.User;
+import com.example.springboot.service.RoleService;
 import com.example.springboot.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,17 +14,19 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class UserController {
 	private final UserService userService;
+	private final RoleService roleService;
 
 	@Autowired
-	public UserController(UserService userService) {
+	public UserController(UserService userService, RoleService roleService) {
 		this.userService = userService;
+		this.roleService = roleService;
 	}
 
 	@GetMapping(value = "/admin")
 	public String getUserList(ModelMap model) {
 		model.addAttribute("newUser", new User());
 		model.addAttribute("users", userService.getAllUsers());
-
+		model.addAttribute("roles", roleService.findAll());
 		return "admin";
 	}
 
