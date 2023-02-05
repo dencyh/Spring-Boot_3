@@ -59,7 +59,7 @@ public class AppConfig {
 	}
 
 	@Bean
-	public PlatformTransactionManager getTransactionManager() {
+	public PlatformTransactionManager transactionManager() {
 		JpaTransactionManager transactionManager = new JpaTransactionManager();
 		transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
 
