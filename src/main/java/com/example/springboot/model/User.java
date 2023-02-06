@@ -35,6 +35,9 @@ public class User implements UserDetails {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private java.sql.Date birthDate;
 
+	@Transient
+	private String[] rolesArray;
+
 	@ManyToMany(
 		fetch = FetchType.EAGER,
 		cascade = {CascadeType.PERSIST, CascadeType.MERGE}
@@ -118,6 +121,18 @@ public class User implements UserDetails {
 		this.roles = roles;
 	}
 
+	public String[] getRolesArray() {
+		return rolesArray;
+	}
+
+	public void setRolesArray(String[] rolesArray) {
+		this.rolesArray = rolesArray;
+	}
+
+	public String[] getRolesNames() {
+		return getRoles().stream().map(Role::getName).toArray(String[]::new);
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return getRoles();
@@ -154,7 +169,7 @@ public class User implements UserDetails {
 
 	@Override
 	public String toString() {
-		return "id = " + id + "\nemail = " + email + "\nfirstName = " + firstName + "\nlastName = " + lastName +
-			   "\nbirthDate = " + birthDate;
+		return "{id = " + id + "\nemail = " + email + "\nfirstName = " + firstName + "\nlastName = " + lastName +
+			   "\nbirthDate = " + birthDate + "}";
 	}
 }

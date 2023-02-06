@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Navbar</title>
+</head>
+<body>
+<nav class="navbar text-bg-dark p-3" th:fragment="navbar">
+  <div class="container-fluid">
+    <h4 class="text-white fw-normal">
+      <span class="fw-bolder" th:text="${#authentication.getPrincipal().getUsername()}" />
+      <span>with roles: </span>
+      <span th:text="${#strings.arrayJoin(#authentication.getPrincipal().getRolesNames(), ' ')}"/>
+    </h4>
+    <form th:action="@{/logout}" method="post">
+      <input type="submit" value="Logout" class="btn bg-transparent text-white-50 text-decoration-none fs-5"/>
+    </form>
+  </div>
+</nav>
+</body>
+</html>
