@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<body>
+<form
+    th:fragment="userForm"
+    th:object="${newUser}"
+      id="userForm"
+      class="d-flex flex-column align-items-center">
+  <div class="mb-3 d-flex flex-column align-items-center w-100">
+    <label for="firstName" class="form-label fw-bold">First name</label>
+    <input type="text" class="form-control" id="firstName" required th:field="*{firstName}">
+  </div>
+  <div class="mb-3 d-flex flex-column align-items-center w-100">
+    <label for="lastName" class="form-label fw-bold">Last name</label>
+    <input type="text" class="form-control" id="lastName" required th:field="*{lastName}">
+  </div>
+  <div class="mb-3 d-flex flex-column align-items-center w-100">
+    <label for="birthDate" class="form-label fw-bold">Birth date</label>
+    <input type="date"
+           class="form-control"
+           id="birthDate"
+           name="birthDate"
+           th:field="*{utilBirthDate}"
+    >
+  </div>
+  <div class="mb-3 d-flex flex-column align-items-center w-100">
+    <label for="email" class="form-label fw-bold">Email address</label>
+    <input type="email" class="form-control" id="email" required th:field="*{email}">
+  </div>
+  <div class="mb-3 d-flex flex-column align-items-center w-100">
+    <label for="password" class="form-label fw-bold">Password</label>
+    <input type="password" class="form-control" id="password" required th:field="*{password}">
+  </div>
+
+  <div class="mb-3 d-flex flex-column align-items-center w-100">
+    <label for="role">Role</label>
+    <select th:size="${roles.size()}"
+            th:field="*{rolesArray}"
+            id="role"
+            multiple
+            required
+            class="form-select">
+      <option th:each="role: ${roles}"
+              th:value="${role.getName()}"
+              th:text="${role.getName()}"
+      />
+    </select>
+  </div>
+</form>
+</body>
+</html>

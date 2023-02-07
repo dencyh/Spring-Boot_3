@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -15,10 +14,10 @@
   <title>Admin panel</title>
 </head>
 <body style="height: 100vh">
-<div th:insert="Navbar::navbar"></div>
+<div th:insert="~{/components/navbar::navbar}"></div>
 
 <main class="d-flex h-100">
-  <div class="col-2" th:insert="Sidebar::sidebar"></div>
+  <div class="col-2" th:insert="~{/components/sidebar::sidebar}"></div>
   <section class="col-10 bg-light px-5 pt-4">
     <h1 class="mb-3">Admin panel</h1>
     <ul class="nav nav-tabs fs-5" id="mainTab" role="tablist">
@@ -50,105 +49,30 @@
       <!-- Table tab-->
       <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
         <h4 class="p-3 mb-0 border-bottom">All Users</h4>
-        <div class="p-4 bg-white">
-          <table class="table table-striped border-top pt-3  fs-5">
-            <thead>
-            <tr>
-              <th scope="col" class="py-3 ps-3">ID</th>
-              <th scope="col" class="py-3"> Email</th>
-              <th scope="col" class="py-3"> First name</th>
-              <th scope="col" class="py-3"> Last name</th>
-              <th scope="col" class="py-3"> Date of birth</th>
-              <th scope="col" class="py-3"> Role</th>
-              <th scope="col" class="py-3"> Edit</th>
-              <th scope="col" class="py-3"> Delete</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="user: ${users}">
-              <td class="py-3 ps-3 align-middle" th:text="${user.getId()}"/>
-              <td class="py-3 align-middle" th:text="${user.getEmail()}"/>
-              <td class="py-3 align-middle" th:text="${user.getFirstName()}"/>
-              <td class="py-3 align-middle" th:text="${user.getLastName()}"/>
-              <td class="py-3 align-middle" th:text="${#dates.format(user.getBirthDate(), 'dd-MM-yyyy')}"/>
-              <td class="py-3 align-middle">
-                <span th:each="role: ${user.getRoles()}" th:text="${role.getName()} + '&nbsp;'"/>
-              </td>
-              <td class="py-3 align-middle fs-6">
-                <a th:href="@{'/admin/{id}/edit'(id=${user.getId()})}" class="btn btn-info text-white">
-                  <span>Edit</span>
-                  <i class="bi bi-pencil-fill"></i>
-                </a>
-              </td>
-              <td class="align-middle fs-6">
-                <form th:method="DELETE" th:action="@{'/admin/{id}'(id=${user.getId()})}">
-                  <button class="btn btn-danger" aria-label="delete" type="submit">
-                    <span>Delete</span>
-                    <i class="bi bi-trash-fill"></i>
-                  </button>
-                </form>
-              </td>
-            </tr>
-            </tbody>
-          </table>
+        <div th:insert="~{/components/userTable::userTable}" class="p-4 bg-white">
         </div>
       </div>
-
       <!-- Add new user tab-->
       <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
         <h4 class="p-3 mb-0 border-bottom">Add new user</h4>
         <div class="bg-white p-4 d-flex flex-column align-items-center">
-          <form method="POST"
-                th:action="@{/admin}"
-                th:object="${newUser}"
-                class="col-lg-6 d-flex flex-column align-items-center">
-            <div class="mb-3 d-flex flex-column align-items-center w-100">
-              <label for="firstName" class="form-label fw-bold">First name</label>
-              <input type="text" class="form-control" id="firstName" required th:field="*{firstName}">
-            </div>
-            <div class="mb-3 d-flex flex-column align-items-center w-100">
-              <label for="lastName" class="form-label fw-bold">Last name</label>
-              <input type="text" class="form-control" id="lastName" required th:field="*{lastName}">
-            </div>
-            <div class="mb-3 d-flex flex-column align-items-center w-100">
-              <label for="birthDate" class="form-label fw-bold">Birth date</label>
-              <input type="date"
-                     class="form-control"
-                     id="birthDate"
-                     name="birthDate"
-                     th:field="*{utilBirthDate}"
-              >
-            </div>
-            <div class="mb-3 d-flex flex-column align-items-center w-100">
-              <label for="email" class="form-label fw-bold">Email address</label>
-              <input type="email" class="form-control" id="email" required th:field="*{email}">
-            </div>
-            <div class="mb-3 d-flex flex-column align-items-center w-100">
-              <label for="password" class="form-label fw-bold">Password</label>
-              <input type="password" class="form-control" id="password" required th:field="*{password}">
-            </div>
-
-            <div class="mb-3 d-flex flex-column align-items-center w-100">
-              <label for="role">Role</label>
-              <select th:size="${roles.size()}"
-                      th:field="*{rolesArray}"
-                      id="role"
-                      multiple
-                      required
-                      class="form-select">
-                <option th:each="role: ${roles}"
-                        th:value="${role.getName()}"
-                        th:text="${role.getName()}"
-                />
-              </select>
-            </div>
-            <button type="submit" class="mt-5 btn btn-success fs-4">Add new user</button>
-          </form>
+          <div th:insert="${/components/userForm::userForm}" class="col-6"></div>
         </div>
       </div>
     </div>
 
   </section>
+
+  <!-- Delete/Edit modal -->
+  <div th:insert="~{/components/modal::modal}"
+       class="modal fade"
+       id="alterUserModal"
+       tabindex="-1"
+       aria-labelledby="alterUserModal"
+       aria-hidden="true">
+  </div>
 </main>
+
+<script type="text/javascript" th:src="@{/js/admin.js}"></script>
 </body>
 </html>

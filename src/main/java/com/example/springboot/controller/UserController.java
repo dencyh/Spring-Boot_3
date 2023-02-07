@@ -8,7 +8,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +18,6 @@ import java.util.List;
 
 @Controller
 public class UserController {
-	@Autowired
-	private SessionRegistry sessionRegistry;
 
 	private final UserService userService;
 	private final RoleService roleService;

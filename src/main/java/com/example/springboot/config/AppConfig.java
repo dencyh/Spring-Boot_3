@@ -14,14 +14,12 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.Properties;
 
 @Configuration
-@EnableWebMvc
 @PropertySource("classpath:application.properties")
 @ComponentScan(value = "com.example.springboot")
 public class AppConfig {
@@ -64,12 +62,5 @@ public class AppConfig {
 		transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
 
 		return transactionManager;
-	}
-
-	@Bean
-	public FilterRegistrationBean<HiddenHttpMethodFilter> hiddenHttpMethodFilter() {
-		FilterRegistrationBean<HiddenHttpMethodFilter> filterRegistrationBean = new FilterRegistrationBean<>(new HiddenHttpMethodFilter());
-		filterRegistrationBean.setUrlPatterns(Arrays.asList("/*"));
-		return filterRegistrationBean;
 	}
 }

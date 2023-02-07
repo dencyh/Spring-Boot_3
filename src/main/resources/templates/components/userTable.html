@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<body>
+<table th:fragment="userTable" class="table table-striped border-top pt-3  fs-5">
+  <thead>
+  <tr>
+    <th scope="col" class="py-3 ps-3">ID</th>
+    <th scope="col" class="py-3"> Email</th>
+    <th scope="col" class="py-3"> First name</th>
+    <th scope="col" class="py-3"> Last name</th>
+    <th scope="col" class="py-3"> Date of birth</th>
+    <th scope="col" class="py-3"> Role</th>
+    <th scope="col" class="py-3"> Edit</th>
+    <th scope="col" class="py-3"> Delete</th>
+  </tr>
+  </thead>
+  <tbody id="tableBody">
+  </tbody>
+</table>
+</body>
+</html>

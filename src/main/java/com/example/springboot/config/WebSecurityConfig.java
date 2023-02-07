@@ -35,7 +35,12 @@ public class WebSecurityConfig {
 		http
 			.authorizeHttpRequests(requests -> requests
 				.requestMatchers("/admin/**").hasRole("ADMIN")
+				.requestMatchers("/api/**").authenticated()
 				.requestMatchers("/user").authenticated()
+				.requestMatchers(
+					"/css/**",
+					"/js/**"
+				).permitAll()
 				.anyRequest().authenticated())
 			.formLogin(form -> form.loginPage("/login").permitAll().successHandler(successUserHandler))
 			.logout(logout -> logout.permitAll())
