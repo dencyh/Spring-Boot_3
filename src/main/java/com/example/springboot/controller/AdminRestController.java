@@ -1,5 +1,6 @@
 package com.example.springboot.controller;
 
+import com.example.springboot.dto.UserDTO;
 import com.example.springboot.model.User;
 import com.example.springboot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,24 +22,24 @@ public class AdminRestController {
 	}
 
 	@GetMapping(value = "/{id}", produces = "application/json")
-	public User getUser(@PathVariable Long id) {
-		return userService.getUserById(id);
+	public UserDTO getUser(@PathVariable Long id) {
+		return new UserDTO(userService.getUserById(id));
 	}
 
 	@GetMapping(produces = "application/json")
-	public List<User> getAllUser() {
-		return userService.getAllUsers();
+	public List<UserDTO> getAllUser() {
+		return userService.getAllUsers().stream().map(UserDTO::new).toList();
 	}
 
 	@PatchMapping(value = "/{id}", consumes = "application/json")
-	public ResponseEntity<HttpStatus> updateUserById(@RequestBody User user) {
-		userService.updateUser(user);
+	public ResponseEntity<HttpStatus> updateUserById(@RequestBody UserDTO userDTO) {
+		userService.updateUser(new User(userDTO));
 		return ResponseEntity.ok(HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/new", consumes = "application/json")
-	public ResponseEntity<HttpStatus> addUser(@RequestBody User user) {
-		userService.saveUser(user);
+	public ResponseEntity<HttpStatus> addUser(@RequestBody UserDTO userDTO) {
+		userService.saveUser(new User(userDTO));
 		return ResponseEntity.ok(HttpStatus.OK);
 	}
 
@@ -48,3 +49,5 @@ public class AdminRestController {
 		return ResponseEntity.ok(HttpStatus.OK);
 	}
 }
+
+

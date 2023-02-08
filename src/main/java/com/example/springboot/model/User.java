@@ -1,13 +1,13 @@
 package com.example.springboot.model;
 
+import com.example.springboot.dto.UserDTO;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
+import java.sql.Date;
 
 @Entity
 @Table(name = "users")
@@ -28,16 +28,9 @@ public class User implements UserDetails {
 	@Column(name = "lastName", nullable = false)
 	private String lastName;
 
-	@Transient
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date utilBirthDate;
-
 	@Column(name = "birthDate", nullable = false)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private java.sql.Date birthDate;
-
-	@Transient
-	private ArrayList<String> rolesArray;
+	private Date birthDate;
 
 	@ManyToMany(
 		fetch = FetchType.EAGER,
@@ -53,12 +46,21 @@ public class User implements UserDetails {
 	public User() {
 	}
 
-	public User(String firstName, String lastName, String email, Date utilBirthDate) {
+	public User(String firstName, String lastName, String email, Date birthDate) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
-		this.utilBirthDate = utilBirthDate;
-		this.birthDate = new java.sql.Date(utilBirthDate.getTime());
+		this.birthDate = birthDate;
+	}
+
+	public User(UserDTO userDTO) {
+		this.id = userDTO.getId();
+		this.firstName = userDTO.getFirstName();
+		this.lastName = userDTO.getLastName();
+		this.email = userDTO.getEmail();
+		this.password = userDTO.getPassword();
+		this.birthDate = new Date(userDTO.getBirthDate().getTime());
+		this.roles = userDTO.getRoles().stream().map(Role::new).toList();
 	}
 
 	public Long getId() {
@@ -97,20 +99,11 @@ public class User implements UserDetails {
 		this.password = password;
 	}
 
-	public Date getUtilBirthDate() {
+	public Date getBirthDate() {
 		return birthDate;
 	}
 
-	public void setUtilBirthDate(Date utilBirthDate) {
-		this.utilBirthDate = utilBirthDate;
-		this.birthDate = new java.sql.Date(utilBirthDate.getTime());
-	}
-
-	public java.sql.Date getBirthDate() {
-		return birthDate;
-	}
-
-	public void setBirthDate(java.sql.Date birthDate) {
+	public void setBirthDate(Date birthDate) {
 		this.birthDate = birthDate;
 	}
 
@@ -120,14 +113,6 @@ public class User implements UserDetails {
 
 	public void setRoles(Collection<Role> roles) {
 		this.roles = roles;
-	}
-
-	public ArrayList<String> getRolesArray() {
-		return rolesArray;
-	}
-
-	public void setRolesArray(ArrayList<String> rolesArray) {
-		this.rolesArray = rolesArray;
 	}
 
 	public String[] getRolesNames() {

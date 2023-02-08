@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -75,10 +74,14 @@ public class UserServiceImpl implements UserService {
 
 	private void addRole(User user) {
 		// Add roles if any were selected. If no roles were selected add USER role by default
-		if (user.getRolesArray().size() == 0) {
+		if (user.getRoles().size() == 0) {
 			user.setRoles(Collections.singleton(roleRepository.findByName("USER")));
 		} else {
-			user.setRoles(user.getRolesArray().stream().map(roleRepository::findByName).collect(Collectors.toList()));
+			user.setRoles(user
+							  .getRoles()
+							  .stream()
+							  .map(role -> roleRepository.findByName(role.getName()))
+							  .collect(Collectors.toList()));
 		}
 	}
 }

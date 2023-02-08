@@ -10,11 +10,11 @@
     class="d-flex flex-column align-items-center">
   <div class="mb-3 d-flex flex-column align-items-center w-100">
     <label for="firstName" class="form-label fw-bold">First name</label>
-    <input type="text" class="form-control" id="firstName" required>
+    <input type="text" class="form-control" id="firstName" name="firstName" required>
   </div>
   <div class="mb-3 d-flex flex-column align-items-center w-100">
     <label for="lastName" class="form-label fw-bold">Last name</label>
-    <input type="text" class="form-control" id="lastName" required>
+    <input type="text" class="form-control" id="lastName" name="lastName" required>
   </div>
   <div class="mb-3 d-flex flex-column align-items-center w-100">
     <label for="birthDate" class="form-label fw-bold">Birth date</label>
@@ -27,17 +27,18 @@
   </div>
   <div class="mb-3 d-flex flex-column align-items-center w-100">
     <label for="email" class="form-label fw-bold">Email address</label>
-    <input type="email" class="form-control" id="email" required>
+    <input type="email" class="form-control" id="email" name="email" required>
   </div>
   <div class="mb-3 d-flex flex-column align-items-center w-100">
     <label for="password" class="form-label fw-bold">Password</label>
-    <input type="password" class="form-control" id="password" required>
+    <input type="password" class="form-control" id="password" name="password" required>
   </div>
 
   <div class="mb-3 d-flex flex-column align-items-center w-100">
-    <label for="role">Role</label>
+    <label for="roles">Role</label>
     <select th:size="${roles.size()}"
-            id="role"
+            id="roles"
+            name="roles"
             multiple
             required
             class="form-select">

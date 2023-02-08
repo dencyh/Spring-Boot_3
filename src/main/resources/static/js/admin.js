@@ -9,7 +9,7 @@ const USER_KEYS = {
     firstName: "firstName",
     lastName: "lastName",
     birthDate: "birthDate",
-    roles: "rolesArray"
+    roles: "roles"
 };
 
 // ======= Requests =======
@@ -154,7 +154,7 @@ fetchAllUsers().then(users => {
  * Create html user row with given parameters
  * @return HTML element
  */
-function UserRow({id, email, firstName, lastName, birthDate, authorities}) {
+function UserRow({id, email, firstName, lastName, birthDate, roles}) {
     const userItem = createElement("tr");
 
     const userId = createElement("td", "py-3 ps-3 align-middle", userItem);
@@ -173,7 +173,7 @@ function UserRow({id, email, firstName, lastName, birthDate, authorities}) {
     userBirthDate.innerText = birthDate;
 
     const userRoles = createElement("td", "py-3 ps-3 align-middle", userItem);
-    authorities.forEach(role => userRoles.innerText += role.name + " ");
+    roles.forEach(role => userRoles.innerText += role + " ");
 
     const editColum = createElement("td", "py-3 align-middle fs-6", userItem);
     const editBtn = createElement("button", "btn btn-info text-white", editColum);
@@ -217,7 +217,7 @@ function renderAllUsers(parentElement, usersData) {
  * @returns {HTMLElement}
  */
 function renderUserForm(action, user, allRoles) {
-    const {id, firstName, lastName, birthDate, email, password, authorities} = user;
+    const {id, firstName, lastName, birthDate, email, password, roles} = user;
     const formData = [
         {name: USER_KEYS.id, label: "ID", value: id},
         {name: USER_KEYS.firstName, label: "First name", value: firstName},
@@ -225,7 +225,7 @@ function renderUserForm(action, user, allRoles) {
         {name: USER_KEYS.birthDate, label: "Birth date", value: birthDate},
         {name: USER_KEYS.email, label: "Email", value: email},
         {name: USER_KEYS.password, label: "Password", value: password},
-        {name: USER_KEYS.roles, label: "Role", value: authorities}
+        {name: USER_KEYS.roles, label: "Role", value: roles}
     ];
 
     const form = createElement("form", "d-flex flex-column align-items-center");
@@ -254,12 +254,12 @@ function renderUserForm(action, user, allRoles) {
             // If edit set options to all available roles, otherwise only user's roles
             (action === "delete" ? data.value : allRoles).forEach(role => {
                 const option = createElement("option", "", select);
-                option.value = role.name;
-                option.innerText = role.name;
+                option.value = role.name || role;
+                option.innerText = role.name || role;
 
                 // Select user's roles when editing and keep other available roles deselected
                 if (action === "edit") {
-                    option.selected = data.value.find(userRole => userRole.name === role.name);
+                    option.selected = data.value.find(userRole => userRole === role.name);
                 }
             });
             return;
