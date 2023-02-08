@@ -33,7 +33,7 @@ public class User implements UserDetails {
 	private Date birthDate;
 
 	@ManyToMany(
-		fetch = FetchType.EAGER,
+		fetch = FetchType.LAZY,
 		cascade = {CascadeType.PERSIST, CascadeType.MERGE}
 	)
 	@JoinTable(

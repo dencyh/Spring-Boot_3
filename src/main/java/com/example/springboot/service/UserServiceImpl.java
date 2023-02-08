@@ -4,11 +4,11 @@ import com.example.springboot.exception.UserAlreadyExistsException;
 import com.example.springboot.model.User;
 import com.example.springboot.repository.RoleRepository;
 import com.example.springboot.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public void saveUser(User user) {
 		User userFromDb = userRepository.findByEmail(user.getEmail());
 
@@ -55,11 +56,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteUserById(Long id) {
 		userRepository.deleteById(id);
 	}
 
 	@Override
+	@Transactional
 	public void updateUser(User user) {
 		addRole(user);
 
