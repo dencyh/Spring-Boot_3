@@ -1,5 +1,6 @@
 // ======= Constants ========
 const BASE_URL = "http://localhost:8080/api/";
+
 const PASSWORD_PLACEHOLDER = "******";
 const USER_KEYS = {
     id: "id",
@@ -29,29 +30,28 @@ async function fetchAllRoles() {
 
 async function updateUser(id, user) {
     const response = await fetch(BASE_URL + "admin/users/" + id, {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
+        method: "PATCH", headers: {
             "Content-Type": "application/json"
-        },
-        body: JSON.stringify(user)
+        }, body: JSON.stringify(user)
     });
     return response.json();
 }
 
-async function test() {
-    const response = await fetch(BASE_URL + "roles", {
-        method: "PATCH",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: {"hello": "world"}
+async function deleteUser(id) {
+    const response = await fetch(BASE_URL + "admin/users/" + id, {
+        method: "DELETE"
     });
     return response.json();
 }
 
-test().then(console.log);
-
+async function saveUser(user) {
+    const response = await fetch(BASE_URL + "admin/users/new", {
+        method: "POST", headers: {
+            "Content-Type": "application/json"
+        }, body: JSON.stringify(user)
+    });
+    return response.json();
+}
 
 // ====== Modal =======
 async function handleAlterModal(e) {
@@ -89,26 +89,24 @@ async function handleModalAction(e) {
 
     if (modalActionBtn.dataset.action === "edit") {
         userId.disabled = false;
-        const formData = new FormData(form);
-        const output = {};
-        for (const [key, value] of formData) {
-            if (key === "roles") {
-                output[key] ||= [];
-                output[key].push(value);
-            } else {
-                output[key] = value;
-            }
-        }
+        const user = formToUserObj(form);
         userId.disabled = true;
-        // Remove password field if not changed
-        if (output.password === PASSWORD_PLACEHOLDER) {
-            delete output.password;
-        }
-        console.log(output);
-        await updateUser(output.id, output);
-    } else if (modalActionBtn.dataset.action === "delete") {
-        console.log("delete");
 
+        // Remove password field if not changed
+        if (user.password === PASSWORD_PLACEHOLDER) {
+            delete user.password;
+        }
+        updateUser(user.id, user).then(() => {
+            fetchAllUsers().then(users => {
+                renderAllUsers(tableBody, users);
+            });
+        });
+    } else if (modalActionBtn.dataset.action === "delete") {
+        deleteUser(userId.dataset.userId).then(() => {
+            fetchAllUsers().then(users => {
+                renderAllUsers(tableBody, users);
+            });
+        });
     }
 }
 
@@ -118,6 +116,30 @@ modalActionBtn.addEventListener("click", handleModalAction);
 const modalTitle = document.querySelector(".modal-title");
 const modalBody = document.querySelector("#modalBody");
 
+// ======== New user ========
+const newUserForm = document.querySelector("#userForm");
+
+newUserForm.addEventListener("submit", handleNewUser);
+const homeTab = document.querySelector("#home-tab");
+const formTab = document.querySelector("#profile-tab");
+const homePane = document.querySelector("#home-tab-pane");
+const formPane = document.querySelector("#profile-tab-pane");
+
+function handleNewUser(e) {
+    e.preventDefault();
+    const user = formToUserObj(newUserForm);
+
+    saveUser(user).then(() => {
+        newUserForm.reset();
+        homeTab.classList.add("active");
+        formTab.classList.remove("active");
+        homePane.classList.add("active", "show");
+        formPane.classList.remove("active", "show");
+        fetchAllUsers().then(users => {
+            renderAllUsers(tableBody, users);
+        });
+    });
+}
 
 // ======== Table ========
 const tableBody = document.querySelector("#tableBody");
@@ -175,10 +197,15 @@ function UserRow({id, email, firstName, lastName, birthDate, authorities}) {
 /**
  *
  * @param {HTMLElement} parentElement
- * @param {[]} usersData
+ * @param {user[] | user} usersData
  */
 function renderAllUsers(parentElement, usersData) {
-    usersData.forEach(user => parentElement.append(UserRow(user)));
+    parentElement.innerHTML = "";
+    if (Array.isArray(usersData)) {
+        usersData.forEach(user => parentElement.append(UserRow(user)));
+    } else {
+        parentElement.append(UserRow(usersData));
+    }
 }
 
 
@@ -258,8 +285,8 @@ function renderUserForm(action, user, allRoles) {
             input.disabled = true;
         } else if (data.name === USER_KEYS.id) {
             input.disabled = true;
-            input.dataset.userId = id;
         }
+        input.dataset.userId = id;
     });
     return form;
 }
@@ -283,4 +310,24 @@ function createElement(tagName, classList, parent) {
         }
     }
     return element;
+}
+
+/**
+ *
+ * @param {HTMLFormElement} form Form with user values
+ * @returns {{}} User object with an array of roles
+ */
+function formToUserObj(form) {
+    const formData = new FormData(form);
+    const output = {};
+    for (const [key, value] of formData) {
+        // If roles -> create an array and push all roles inside
+        if (key === USER_KEYS.roles) {
+            output[key] ||= [];
+            output[key].push(value);
+        } else {
+            output[key] = value;
+        }
+    }
+    return output;
 }

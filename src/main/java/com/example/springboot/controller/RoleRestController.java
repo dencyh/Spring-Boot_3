@@ -1,9 +1,7 @@
 package com.example.springboot.controller;
 
 import com.example.springboot.model.Role;
-import com.example.springboot.model.User;
 import com.example.springboot.service.RoleService;
-import com.example.springboot.utils.AppLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +28,6 @@ public class RoleRestController {
 
 	@PatchMapping(produces = "application/json")
 	public ResponseEntity<HttpStatus> updateUserById() {
-		AppLogger.error("PATCH request");
 		return ResponseEntity.ok(HttpStatus.OK);
 	}
 }

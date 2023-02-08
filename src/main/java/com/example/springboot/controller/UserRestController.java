@@ -13,7 +13,6 @@ public class UserRestController {
 	@GetMapping(produces = "application/json")
 	public User getCurrentUser(Authentication authentication) {
 		User currentUser = (User) authentication.getPrincipal();
-		AppLogger.info(currentUser);
 		return currentUser;
 	}
 }

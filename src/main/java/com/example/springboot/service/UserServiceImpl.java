@@ -25,8 +25,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	public UserServiceImpl(
-		UserRepository userRepository, RoleRepository roleRepository,
-		BCryptPasswordEncoder passwordEncoder
+		UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder
 	) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
@@ -65,12 +64,10 @@ public class UserServiceImpl implements UserService {
 	public void updateUser(User user) {
 		addRole(user);
 
-		if (!Objects.equals(user.getPassword(), "******")) {
+		if (user.getPassword() != null && !Objects.equals(user.getPassword(), "******")) {
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 		} else {
-			userRepository
-				.findById(user.getId())
-				.ifPresent(userFromDb -> user.setPassword(userFromDb.getPassword()));
+			userRepository.findById(user.getId()).ifPresent(userFromDb -> user.setPassword(userFromDb.getPassword()));
 		}
 
 		userRepository.save(user);
@@ -78,13 +75,10 @@ public class UserServiceImpl implements UserService {
 
 	private void addRole(User user) {
 		// Add roles if any were selected. If no roles were selected add USER role by default
-		if (user.getRolesArray().length == 0) {
+		if (user.getRolesArray().size() == 0) {
 			user.setRoles(Collections.singleton(roleRepository.findByName("USER")));
 		} else {
-			user.setRoles(Arrays
-							  .stream(user.getRolesArray())
-							  .map(roleRepository::findByName)
-							  .collect(Collectors.toList()));
+			user.setRoles(user.getRolesArray().stream().map(roleRepository::findByName).collect(Collectors.toList()));
 		}
 	}
 }

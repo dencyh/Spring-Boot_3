@@ -44,6 +44,7 @@ public class WebSecurityConfig {
 				.anyRequest().authenticated())
 			.formLogin(form -> form.loginPage("/login").permitAll().successHandler(successUserHandler))
 			.logout(logout -> logout.permitAll())
+			.csrf().disable()
 			.sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry());
 
 		return http.build();

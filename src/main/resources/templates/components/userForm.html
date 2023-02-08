@@ -6,16 +6,15 @@
 <body>
 <form
     th:fragment="userForm"
-    th:object="${newUser}"
-      id="userForm"
-      class="d-flex flex-column align-items-center">
+    id="userForm"
+    class="d-flex flex-column align-items-center">
   <div class="mb-3 d-flex flex-column align-items-center w-100">
     <label for="firstName" class="form-label fw-bold">First name</label>
-    <input type="text" class="form-control" id="firstName" required th:field="*{firstName}">
+    <input type="text" class="form-control" id="firstName" required>
   </div>
   <div class="mb-3 d-flex flex-column align-items-center w-100">
     <label for="lastName" class="form-label fw-bold">Last name</label>
-    <input type="text" class="form-control" id="lastName" required th:field="*{lastName}">
+    <input type="text" class="form-control" id="lastName" required>
   </div>
   <div class="mb-3 d-flex flex-column align-items-center w-100">
     <label for="birthDate" class="form-label fw-bold">Birth date</label>
@@ -23,22 +22,21 @@
            class="form-control"
            id="birthDate"
            name="birthDate"
-           th:field="*{utilBirthDate}"
+           required
     >
   </div>
   <div class="mb-3 d-flex flex-column align-items-center w-100">
     <label for="email" class="form-label fw-bold">Email address</label>
-    <input type="email" class="form-control" id="email" required th:field="*{email}">
+    <input type="email" class="form-control" id="email" required>
   </div>
   <div class="mb-3 d-flex flex-column align-items-center w-100">
     <label for="password" class="form-label fw-bold">Password</label>
-    <input type="password" class="form-control" id="password" required th:field="*{password}">
+    <input type="password" class="form-control" id="password" required>
   </div>
 
   <div class="mb-3 d-flex flex-column align-items-center w-100">
     <label for="role">Role</label>
     <select th:size="${roles.size()}"
-            th:field="*{rolesArray}"
             id="role"
             multiple
             required
@@ -48,6 +46,9 @@
               th:text="${role.getName()}"
       />
     </select>
+    <button type="submit" class="mt-5 btn btn-success fs-4">Add new
+      user
+    </button>
   </div>
 </form>
 </body>
