@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -36,7 +37,7 @@ public class User implements UserDetails {
 	private java.sql.Date birthDate;
 
 	@Transient
-	private String[] rolesArray;
+	private ArrayList<String> rolesArray;
 
 	@ManyToMany(
 		fetch = FetchType.EAGER,
@@ -121,11 +122,11 @@ public class User implements UserDetails {
 		this.roles = roles;
 	}
 
-	public String[] getRolesArray() {
+	public ArrayList<String> getRolesArray() {
 		return rolesArray;
 	}
 
-	public void setRolesArray(String[] rolesArray) {
+	public void setRolesArray(ArrayList<String> rolesArray) {
 		this.rolesArray = rolesArray;
 	}
 
