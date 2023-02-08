@@ -4,20 +4,21 @@ import com.example.springboot.exception.UserAlreadyExistsException;
 import com.example.springboot.model.User;
 import com.example.springboot.repository.RoleRepository;
 import com.example.springboot.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
@@ -39,6 +40,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public void saveUser(User user) {
 		User userFromDb = userRepository.findByEmail(user.getEmail());
 
@@ -57,15 +59,30 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteUserById(Long id) {
 		userRepository.deleteById(id);
 	}
 
 	@Override
+	@Transactional
 	public void updateUser(User user) {
 		addRole(user);
 
-		if (!Objects.equals(user.getPassword(), "******")) {
+		// Update current user authorities
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		User currentUser = (User) authentication.getPrincipal();
+		if (currentUser.getId().equals(user.getId())) {
+			List<GrantedAuthority> updatedAuthorities = new ArrayList<>(user.getAuthorities());
+			Authentication newAuth = new UsernamePasswordAuthenticationToken(
+				currentUser,
+				authentication.getCredentials(),
+				updatedAuthorities
+			);
+			SecurityContextHolder.getContext().setAuthentication(newAuth);
+		}
+
+		if (user.getPassword() != null && Objects.equals(user.getPassword(), "******")) {
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 		} else {
 			userRepository

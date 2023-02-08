@@ -39,7 +39,7 @@ public class User implements UserDetails {
 	private String[] rolesArray;
 
 	@ManyToMany(
-		fetch = FetchType.EAGER,
+		fetch = FetchType.LAZY,
 		cascade = {CascadeType.PERSIST, CascadeType.MERGE}
 	)
 	@JoinTable(
