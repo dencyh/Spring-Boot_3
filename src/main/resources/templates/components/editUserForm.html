@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<body>
+<div
+    th:fragment="editUserForm"
+    class="d-flex flex-column align-items-center">
+  <div class="mb-3 d-flex flex-column align-items-center w-100">
+    <label class="form-label fw-bold">ID</label>
+    <input type="text" class="form-control" th:name="id" th:value="*{id}" disabled>
+  </div>
+  <div class="mb-3 d-flex flex-column align-items-center w-100">
+    <label class="form-label fw-bold">First name</label>
+    <input type="text" class="form-control" th:name="firstName" th:value="*{firstName}" required>
+  </div>
+  <div class="mb-3 d-flex flex-column align-items-center w-100">
+    <label class="form-label fw-bold">Last name</label>
+    <input type="text" class="form-control" th:name="lastName" th:value="*{lastName}" required>
+  </div>
+  <div class="mb-3 d-flex flex-column align-items-center w-100">
+    <label class="form-label fw-bold">Birth date</label>
+    <input type="date"
+           class="form-control"
+           required
+           th:value="*{birthDate}"
+           th:name="birthDate"
+    >
+  </div>
+  <div class="mb-3 d-flex flex-column align-items-center w-100">
+    <label class="form-label fw-bold">Email address</label>
+    <input type="email" class="form-control" th:name="email" th:value="*{email}" required>
+  </div>
+  <div class="mb-3 d-flex flex-column align-items-center w-100">
+    <label class="form-label fw-bold">Password</label>
+    <input type="password" class="form-control" th:name="password" th:value="'******'" required>
+  </div>
+
+  <div class="mb-3 d-flex flex-column align-items-center w-100">
+    <label>Role</label>
+    <select th:size="${roles.size()}"
+            th:name="roles"
+            multiple
+            required
+            class="form-select">
+      <option th:each="role: ${roles}"
+              th:value="${role.getName()}"
+              th:text="${role.getName()}"
+              th:selected="${user.roles.contains(role.getName)}"
+      />
+    </select>
+  </div>
+</div>
+</body>
+</html>

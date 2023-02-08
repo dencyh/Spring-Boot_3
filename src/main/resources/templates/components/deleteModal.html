@@ -4,17 +4,19 @@
       xmlns:th="http://www.thymeleaf.org"
 >
 <body>
-<div th:fragment="modal" class="modal-dialog">
+<div th:fragment="deleteModal" class="modal-dialog">
   <div class="modal-content">
     <div class="modal-header">
       <h1 class="modal-title fs-5">Delete user</h1>
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    <div id="modalBody" class="modal-body mx-5">
+    <div class="modal-body mx-5" th:insert="~{components/deleteUserForm::deleteUserForm}">
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-danger" data-bs-dismiss="modal" data-action>Delete</button>
+      <form th:method="DELETE" th:action="@{'/admin/{id}'(id=${user.getId()})}">
+        <button type="submit" class="btn btn-danger" data-bs-dismiss="modal" data-action>Delete</button>
+      </form>
     </div>
   </div>
 </div>

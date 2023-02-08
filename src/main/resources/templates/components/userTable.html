@@ -18,6 +18,51 @@
   </tr>
   </thead>
   <tbody id="tableBody">
+  <tr th:each="user: ${users}">
+    <td class="py-3 ps-3 align-middle" th:text="${user.getId()}"/>
+    <td class="py-3 align-middle" th:text="${user.getEmail()}"/>
+    <td class="py-3 align-middle" th:text="${user.getFirstName()}"/>
+    <td class="py-3 align-middle" th:text="${user.getLastName()}"/>
+    <td class="py-3 align-middle" th:text="${#dates.format(user.getBirthDate(), 'dd-MM-yyyy')}"/>
+    <td class="py-3 align-middle">
+      <span th:each="role: ${user.getRoles()}" th:text="${role} + '&nbsp;'"/>
+    </td>
+    <td class="py-3 align-middle fs-6">
+      <!--      <a th:href="@{'/admin/{id}/edit'(id=${user.getId()})}" class="btn btn-info text-white">-->
+      <button type="button"
+              class="btn btn-info text-white"
+              data-bs-toggle="modal"
+              th:data-bs-target="${'#editModal' + user.getId()}">
+        <span>Edit</span>
+        <i class="bi bi-pencil-fill"></i>
+      </button>
+      <!--      </a>-->
+    </td>
+    <td class="align-middle fs-6">
+      <button class="btn btn-danger"
+              type="button"
+              data-bs-toggle="modal"
+              th:data-bs-target="${'#deleteModal' + user.getId()}">
+        <span>Delete</span>
+        <i class="bi bi-trash-fill"></i>
+      </button>
+      <!--      </form>-->
+    </td>
+    <!--  Edit modal -->
+    <div th:insert="~{components/editModal::editModal}"
+         class="modal fade"
+         th:id="${'editModal' + user.getId()}"
+         tabindex="-1"
+         aria-labelledby="editModalLabel"
+         aria-hidden="true"></div>
+    <!--  Delete modal -->
+    <div th:insert="~{components/deleteModal::deleteModal}"
+         class="modal fade"
+         th:id="${'deleteModal' + user.getId()}"
+         tabindex="-1"
+         aria-labelledby="deleteModalLabel"
+         aria-hidden="true"></div>
+  </tr>
   </tbody>
 </table>
 </body>

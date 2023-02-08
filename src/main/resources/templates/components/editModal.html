@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<body>
+<div th:fragment="editModal" class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h1 class="modal-title fs-5">Delete user</h1>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <form
+        th:object="${user}"
+        th:method="PATCH"
+        th:action="@{'/admin/{id}/update'(id=${user.getId()})}"
+    >
+      <div th:insert="~{components/editUserForm::editUserForm}" class="modal-body mx-5">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" data-action>Edit</button>
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+</body>
+</html>

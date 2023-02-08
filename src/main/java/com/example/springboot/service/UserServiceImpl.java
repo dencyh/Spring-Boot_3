@@ -40,7 +40,6 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public void saveUser(User user) {
 		User userFromDb = userRepository.findByEmail(user.getEmail());
-
 		if (userFromDb != null) {
 			throw new UserAlreadyExistsException(String.format("User with email %s already exists", user.getEmail()));
 		}

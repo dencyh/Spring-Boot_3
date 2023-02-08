@@ -15,4 +15,5 @@ public class UserController {
 		model.addAttribute("currentUser", (User) authentication.getPrincipal());
 		return "user";
 	}
+
 }
