@@ -46,10 +46,11 @@ public class User implements UserDetails {
 	public User() {
 	}
 
-	public User(String firstName, String lastName, String email, Date birthDate) {
+	public User(String email, String password, String firstName, String lastName, Date birthDate) {
+		this.email = email;
+		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.email = email;
 		this.birthDate = birthDate;
 	}
 

@@ -21,7 +21,21 @@ public class RoleService {
 		return roleRepository.findAll();
 	}
 
+	public Role findByName(String name) {
+		return roleRepository.findByName(name);
+	}
+
 	public Role findOne(Long id) {
 		return roleRepository.findById(id).orElse(null);
+	}
+
+	@Transactional
+	public void saveRole(Role role) {
+		roleRepository.save(role);
+	}
+
+	@Transactional
+	public void saveAllRoles(List<Role> roles) {
+		roleRepository.saveAll(roles);
 	}
 }

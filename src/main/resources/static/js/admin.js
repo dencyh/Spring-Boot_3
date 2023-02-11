@@ -248,6 +248,9 @@ function renderUserForm(action, user, allRoles) {
             select.name = data.name;
             select.multiple = true;
             select.required = true;
+            if (action === "delete") {
+                select.disabled = true;
+            }
             // If delete size == user's roles
             select.size = action === "delete" ? data.value.length : allRoles.length;
 

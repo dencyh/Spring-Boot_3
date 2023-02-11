@@ -2,26 +2,19 @@ package com.example.springboot.config;
 
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 import javax.sql.DataSource;
-import java.util.Arrays;
 import java.util.Properties;
 
 @Configuration
-@PropertySource("classpath:application.properties")
-@ComponentScan(value = "com.example.springboot")
 public class AppConfig {
 	@Autowired
 	private Environment env;
